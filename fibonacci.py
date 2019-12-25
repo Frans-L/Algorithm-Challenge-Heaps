@@ -149,12 +149,15 @@ class FibonacciHeap:
             
             # remove current min
             self._debug_nodes.remove(self.min)
-            self.min = prev_min.right
-            self._remove_node(prev_min)
-            if self.min.right == self.min:
-                self.min = None
-            else:
+            if self.min.right != self.min:
+                self.min = prev_min.right
+                self._remove_node(prev_min)
                 self._consolidate()
+            # no nodes left
+            else:
+                self.min = None
+                self._remove_node(prev_min)
+                
 
             self.no_nodes -= 1
         return prev_min
