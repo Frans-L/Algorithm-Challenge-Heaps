@@ -56,6 +56,7 @@ class HollowHeap(heap.Heap):
 
         # lazy deletion
         if self.min.item is not None:
+            self.no_nodes -= 1
             return self.min
 
         A = [None] * (self.max_rank * 2 + self.no_nodes)  # rank max size
@@ -103,6 +104,7 @@ class HollowHeap(heap.Heap):
                     h = self._link(h, A[i])  # returns the smaller one
                 A[i] = None
 
+        self.no_nodes -= 1
         # update the min
         self.min = h
         if self.min is not None:
