@@ -1,5 +1,5 @@
 import math
-import abstract_heap as heap
+import heaps.abstract_heap as heap
 
 
 class _Node(heap.HeapNode):

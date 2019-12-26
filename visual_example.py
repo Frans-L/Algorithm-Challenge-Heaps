@@ -1,15 +1,21 @@
-from hollow import HollowHeap
-from fibonacci import FibonacciHeap
+from heaps.hollow import HollowHeap
+from heaps.fibonacci import FibonacciHeap
 from visualize import visualize
 
+# Visual examples how FibonacciHeap and HollowHeap works.
+# The code halts while a graph window is open. To continue,
+# close the graph window.
 
-# Example commands to a heap and their visualization.
-# The code will stop running while visualization.
-# To go forward, the appeared window must be closed
+# HollowHeap and FibonacciHeap do not require any
+# extra packages. But the visualization requires some
+# packages. You can install them by running:
+# > pip install -r visual_requirements.txt
+
+
 def example_run(heap, title):
-    values = [22, 16, 8, 13, 4, 12, 6, 5, 11]
-    nodes = []
 
+    nodes = []
+    values = [22, 16, 8, 13, 4, 12, 6, 5, 11]
     for n in values:
         node = heap.insert(n)
         nodes.append(node)

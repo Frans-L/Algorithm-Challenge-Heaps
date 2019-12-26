@@ -1,4 +1,4 @@
-import abstract_heap as heap
+import heaps.abstract_heap as heap
 from misc import hierarchy_pos
 import networkx as nx
 import matplotlib.pyplot as plt
