@@ -133,7 +133,7 @@ class HollowHeap(heap.Heap):
         h = self._link(v, self.min)
         if h != self.min:
             self.min = h
-        return h
+        return v
 
     # Returns the whole layer as a list.
     # One node from the layer must be given
@@ -177,46 +177,3 @@ class HollowHeap(heap.Heap):
         else:
             self._add_child(n, m)
             return m
-
-
-if __name__ == "__main__":
-    from visualize import visualize
-
-    f = HollowHeap()
-
-    # nodes = [4,7,5,3,1,10,2]
-    # for n in nodes:
-    #     f.insert(n)
-
-    k = f.insert(7)
-    n = f.insert(3)
-    m = f.insert(10)
-    # f._debug_insert_child(n, 11)
-    n = f.insert(12)
-    # f._debug_insert_child(n, 15)
-    n = f.insert(8)
-    n = f.insert(4)
-    n = f.insert(9)
-
-    f.delete_min()
-
-    print("min", f.min.key)
-    visualize(f)
-
-    f.delete(k)
-    print("min", f.min.key)
-    visualize(f)
-
-    f.delete(m)
-    print("min", f.min.key)
-    visualize(f)
-
-    f.delete_min()
-    print("min", f.min.key)
-    visualize(f)
-
-    # for i in range(3):
-    #     print("----")
-    #     f.delete_min()
-    #     print("min", f.min.key)
-    #     f.vizualize()

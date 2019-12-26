@@ -94,6 +94,8 @@ class FibonacciHeap(heap.Heap):
             self._cut(node)
             self._cascading_cut(parent)
 
+        return node
+
     # Adds node to left side of the given right_node
     def _add_node_left(self, node, right_node):
         node.right = right_node
@@ -215,43 +217,3 @@ class FibonacciHeap(heap.Heap):
         top = self._find_root_item()
         root_layer = self._layer_as_list(top)
         self.min = min(root_layer, key=lambda n: n.key)
-
-
-if __name__ == "__main__":
-
-    from visualize import visualize
-
-    f = FibonacciHeap()
-
-    # nodes = [4,7,5,3,1,10,2]
-    # for n in nodes:
-    #     f.insert(n)
-
-    m = f.insert(7)
-    n = f.insert(4)
-    n = f.insert(2)
-    k = f.insert(8)
-    n = f.insert(12)
-    n = f.insert(5)
-
-    f.delete_min()
-    print("min key", f.min.key)
-    visualize(f)
-    # f.visualize()
-
-    f.decrease_key(k, 6)
-    print("min key", f.min.key)
-    visualize(f)
-    # f.visualize()
-
-    f.delete(k)
-    print("min key", f.min.key, 1)
-    visualize(f)
-    # f.visualize()
-
-    for i in range(3):
-        print("----")
-        f.delete_min()
-        print("min key", f.min.key)
-        visualize(f)
-        # f.visualize()
