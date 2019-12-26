@@ -94,12 +94,12 @@ class HollowHeap:
 
     # Deletes and returns the min element
     def delete_min(self):
-        self._delete(self.min.item)
+        self.delete(self.min)
 
     # Deletes node
-    def _delete(self, item):
-        item.node.item = None
-        item.node = None
+    def delete(self, node):
+        node.item = None
+        node = None
 
         # lazy deletion
         if self.min.item != None: 
