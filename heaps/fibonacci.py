@@ -96,6 +96,25 @@ class FibonacciHeap(heap.Heap):
 
         return node
 
+    # Merges another heap into this heap
+    def merge(self, heap):
+        assert isinstance(heap, FibonacciHeap)
+
+        # moves given heap between min and min.right
+        first = self.min
+        last = self.min.right
+        second = heap.min
+        second_last = heap.min.left
+
+        first.right = second
+        second.left = first
+        last.left = second_last
+        second_last.right = last
+
+        self.no_nodes += heap.no_nodes
+        if heap.min.key < self.min.key:
+            self.min = heap.min
+
     # Adds node to left side of the given right_node
     def _add_node_left(self, node, right_node):
         node.right = right_node

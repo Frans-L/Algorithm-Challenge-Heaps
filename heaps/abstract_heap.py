@@ -26,7 +26,7 @@ class Heap:
     def delete_min(self):
         raise NotImplementedError
 
-    # Merges another heap to this heap
+    # Merges another heap into this heap
     def merge(self, heap):
         raise NotImplementedError
 

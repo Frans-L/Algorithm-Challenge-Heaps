@@ -135,6 +135,12 @@ class HollowHeap(heap.Heap):
             self.min = h
         return v
 
+    # Merges another heap into this heap
+    def merge(self, heap):
+        assert isinstance(heap, HollowHeap)
+        self.min = self._meld(self.min, heap.min)
+        self.no_nodes += heap.no_nodes
+
     # Returns the whole layer as a list.
     # One node from the layer must be given
     def _layer_as_list(self, node):
@@ -156,7 +162,7 @@ class HollowHeap(heap.Heap):
         self.no_nodes += 1
         return n
 
-    # Combines safely two hollow heaps
+    # Combines two sub trees
     def _meld(self, n, m):
         if n is None:
             return m
