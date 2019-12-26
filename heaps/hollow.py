@@ -52,7 +52,7 @@ class HollowHeap(heap.Heap):
         if self.min.item is not None:
             return self.min
 
-        A = [None] * (self.max_rank + self.no_nodes + 256)  # rank max size
+        A = [None] * (self.max_rank * 2 + self.no_nodes)  # rank max size
         h = self.min  # use same naming as in pseudo code
         h.right = None
         while h is not None:
