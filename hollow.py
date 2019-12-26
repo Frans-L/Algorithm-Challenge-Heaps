@@ -147,6 +147,37 @@ class HollowHeap:
         return self.min
 
 
+    # Decreases the key of the node.
+    # new_key must lower than current key value.
+    # node must have an item, cannot be hollow.
+    def decrease_key(self, node, new_key):
+        assert node.key > new_key, \
+            "The new_key must be lower than current when decreasing key."
+        assert node.item is not None, \
+            "The node is missing item. It's hollow. Cannot be decreased."
+
+        u = node # same naming as in pseudo code
+
+        # decreasing min value, simple cases
+        if u == self.min:
+            u.key = new_key
+            return self.min
+        
+        # otherwise
+        v = _Node(new_key, u.item.val)
+        self._debug_nodes.add(v)
+        u.item = None
+
+        if u.rank > 2:
+            v.rank = u.rank - 2
+        v.child = u
+        u.ep = v
+
+        h = self._link(v, self.min)
+        if h != self.min:
+            self.min = h
+        return h
+
 
     # Inserts new node into the heap.
     # Can be used with key and value
@@ -203,6 +234,8 @@ class HollowHeap:
                 output += f" r: {n.right.key}"
             if n.child is not None:
                 output += f" c: {n.child.key}"
+            if n.ep is not None:
+                output += f" ep: {n.ep.key}"
             print(output)
 
 if __name__ == "__main__":
