@@ -154,7 +154,8 @@ class HollowHeap:
 
         # update the min
         self.min = h
-        self.min.right = None
+        if self.min is not None:
+            self.min.right = None
         return self.min
 
 
