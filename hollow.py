@@ -1,12 +1,12 @@
 import math
+import abstract_heap as heap
 
 
-class _Node:
+class _Node(heap.HeapNode):
     def __init__(self, key, val):
         self.key = key
         self.item = _Item(val, self)
-        self.child = None
-        self.right = None
+        self.child = self.right = None
         self.ep = None  # extra parent, only hollow can have it
         self.rank = 0
 
@@ -17,91 +17,33 @@ class _Item:
         self.node = node
 
 
-class HollowHeap:
-
+class HollowHeap(heap.Heap):
     def __init__(self):
         self.min = None
         self.max_rank = 0
         self.no_nodes = 0
-        self._debug_nodes = set()
 
-    # Draws the FibonacciHeap as a graph
-    def vizualize(self):
-        import networkx as nx
-        import matplotlib.pyplot as plt
-        from collections import defaultdict
-        from misc_visualization import hierarchy_pos
-        import queue
+    # Returns the min node
+    def find_min(self):
+        return self.min
 
-        G = nx.DiGraph()
-        label_dict = {}  # maps nodes to labels
+    # Inserts new node into the heap.
+    # Can be used with key and value
+    # or only with key.
+    def insert(self, key, value=None):
+        if value is None:
+            value = key
 
-        # first nodes
-        for n in self._debug_nodes:
-            G.add_node(n)
-            label_dict[n] = f"{n.key}" if n.item is not None else "H"
+        n = _Node(key, value)
+        self.min = self._meld(n, self.min)
+        self.no_nodes += 1
+        return n
 
-        # parent -> child edges
-        isChild = set()  # used to find root level
-        for n in self._debug_nodes:
-            c = n.child
-            if c is not None:
-                childs = self._layer_as_list(c)
-                for m in childs:
-                    isChild.add(m)
-                    if m.ep != n:
-                        G.add_edge(n, m, style="child")
-                    else:
-                        G.add_edge(n, m, style="ep_child")
-
-        G.add_node("root")
-        label_dict["root"] = f""
-        for n in self._debug_nodes:
-            if n not in isChild:
-                G.add_edge("root", n, style="root")
-
-        # print info
-        self._debug_print_nodes()
-
-        # drawing
-        layouts = [hierarchy_pos, nx.spring_layout]
-        for f in layouts:
-            try:
-                pos = f(G)
-                # root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
-                ep_child = [
-                    (u, v) for (u, v, d) in G.edges(
-                        data=True) if d['style'] == "ep_child"]
-                child = [
-                    (u, v) for (u, v, d) in G.edges(
-                        data=True) if d['style'] == "child"]
-                nodes = [n for (n, d) in G.nodes(data=True) if n != "root"]
-                nx.draw_networkx_nodes(G, pos, nodelist=nodes)
-                # nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dotted")
-                nx.draw_networkx_edges(
-                    G, pos, edgelist=ep_child, arrows=False, style="dashed")
-                nx.draw_networkx_edges(G, pos, edgelist=child)
-                nx.draw_networkx_labels(G, pos, labels=label_dict)
-                plt.show()
-                break
-            except BaseException:
-                print("WARNING: Drawing failed, trying different layout.")
-
-    # Returns the whole layer as a list.
-    # One node from the layer must be given
-    def _layer_as_list(self, node):
-        nodes = []
-        n = node
-        while n is not None:
-            nodes.append(n)
-            n = n.right
-        return nodes
-
-    # Deletes and returns the min element
+    # Deletes and returns the min node
     def delete_min(self):
         self.delete(self.min)
 
-    # Deletes node
+    # Deletes the given node
     def delete(self, node):
         node.item = None
         node = None
@@ -109,8 +51,6 @@ class HollowHeap:
         # lazy deletion
         if self.min.item is not None:
             return self.min
-
-        self._debug_nodes.remove(self.min)
 
         A = [None] * (self.max_rank + self.no_nodes + 256)  # rank max size
         h = self.min  # use same naming as in pseudo code
@@ -167,10 +107,12 @@ class HollowHeap:
     # new_key must lower than current key value.
     # node must have an item, cannot be hollow.
     def decrease_key(self, node, new_key):
-        assert node.key > new_key, \
-            "The new_key must be lower than current when decreasing key."
-        assert node.item is not None, \
-            "The node is missing item. It's hollow. Cannot be decreased."
+        assert (
+            node.key > new_key
+        ), "The new_key must be lower than current when decreasing key."
+        assert (
+            node.item is not None
+        ), "The node is missing item. It's hollow. Cannot be decreased."
 
         u = node  # same naming as in pseudo code
 
@@ -181,7 +123,6 @@ class HollowHeap:
 
         # otherwise
         v = _Node(new_key, u.item.val)
-        self._debug_nodes.add(v)
         u.item = None
 
         if u.rank > 2:
@@ -194,18 +135,15 @@ class HollowHeap:
             self.min = h
         return h
 
-    # Inserts new node into the heap.
-    # Can be used with key and value
-    # or only with key.
-    def insert(self, key, value=None):
-        if value is None:
-            value = key
-
-        n = _Node(key, value)
-        self._debug_nodes.add(n)
-        self.min = self._meld(n, self.min)
-        self.no_nodes += 1
-        return n
+    # Returns the whole layer as a list.
+    # One node from the layer must be given
+    def _layer_as_list(self, node):
+        nodes = []
+        n = node
+        while n is not None:
+            nodes.append(n)
+            n = n.right
+        return nodes
 
     # Inserts new node as a child
     # Heap do not allow this, but this is only used for debugging
@@ -214,7 +152,6 @@ class HollowHeap:
             value = key
 
         n = _Node(key, value)
-        self._debug_nodes.add(n)
         self._add_child(n, parent)
         self.no_nodes += 1
         return n
@@ -241,20 +178,9 @@ class HollowHeap:
             self._add_child(n, m)
             return m
 
-    # Prints information of nodes
-    def _debug_print_nodes(self):
-        for n in self._debug_nodes:
-            output = f"{n.key} -> "
-            if n.right is not None:
-                output += f" r: {n.right.key}"
-            if n.child is not None:
-                output += f" c: {n.child.key}"
-            if n.ep is not None:
-                output += f" ep: {n.ep.key}"
-            print(output)
-
 
 if __name__ == "__main__":
+    from visualize import visualize
 
     f = HollowHeap()
 
@@ -275,19 +201,19 @@ if __name__ == "__main__":
     f.delete_min()
 
     print("min", f.min.key)
-    f.vizualize()
+    visualize(f)
 
     f.delete(k)
     print("min", f.min.key)
-    f.vizualize()
+    visualize(f)
 
     f.delete(m)
     print("min", f.min.key)
-    f.vizualize()
+    visualize(f)
 
     f.delete_min()
     print("min", f.min.key)
-    f.vizualize()
+    visualize(f)
 
     # for i in range(3):
     #     print("----")
