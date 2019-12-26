@@ -107,6 +107,13 @@ class FibonacciHeap(heap.Heap):
     def merge(self, heap):
         assert isinstance(heap, FibonacciHeap)
 
+        # if a heap is empty
+        if heap.min is None:
+            return
+        if self.min is None:
+            self.min = heap.min
+            return
+
         # moves given heap between min and min.right
         first = self.min
         last = self.min.right
