@@ -137,6 +137,12 @@ class FibonacciHeap:
         node.right = node
         node.parent = None
 
+    # Removes given node
+    def delete(self, node):
+        assert self.min is not None
+        self.decrease_key(node, self.min.key - 1)
+        self.delete_min()
+
     # Removes and returns the current min element
     def delete_min(self):
         prev_min = self.min
@@ -296,7 +302,7 @@ if __name__ == "__main__":
     print("min key", f.min.key)
     f.visualize()
 
-    f.decrease_key(m, 1)
+    f.delete(k)
     print("min key", f.min.key, 1)
     f.visualize()
 
