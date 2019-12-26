@@ -1,9 +1,5 @@
 import math
 
-# used for visualization
-from misc_visualization import hierarchy_pos
-
-
 class _Node:
     def __init__(self,key,val):
         self.key = key
@@ -31,6 +27,7 @@ class HollowHeap:
         import networkx as nx
         import matplotlib.pyplot as plt
         from collections import defaultdict
+        from misc_visualization import hierarchy_pos
         import queue
 
         G = nx.DiGraph()
@@ -39,7 +36,8 @@ class HollowHeap:
         # first nodes
         for n in self._debug_nodes:
             G.add_node(n)
-            label_dict[n] = f"{n.key}" 
+            label_dict[n] = f"{n.key}" if n.item is not None else "H"
+            
        
         # parent -> child edges
         isChild = set() # used to find root level
@@ -49,27 +47,40 @@ class HollowHeap:
                 childs = self._layer_as_list(c)
                 for m in childs:
                     isChild.add(m)
-                    G.add_edge(n, m, style="child")
-        
-        # parent edges
+                    if m.ep != n:
+                        G.add_edge(n, m, style="child")
+                    else:
+                        G.add_edge(n, m, style="ep_child")
+
+        G.add_node("root")
+        label_dict["root"] = f"" 
         for n in self._debug_nodes:
             if n not in isChild:
-                if n.right is not None:
-                    G.add_edge(n, n.right, style="root")
+                G.add_edge("root", n, style="root")
 
 
         # print info
         self._debug_print_nodes()
 
         # drawing
-        pos = hierarchy_pos(G)
-        root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
-        child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "child"]
-        nx.draw_networkx_nodes(G, pos)
-        nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dashed")
-        nx.draw_networkx_edges(G, pos, edgelist=child)
-        nx.draw_networkx_labels(G, pos, labels=label_dict)
-        plt.show()
+        layouts = [hierarchy_pos, nx.spring_layout]
+        for f in layouts:
+            try:
+                pos = f(G)
+                # root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
+                ep_child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "ep_child"]
+                child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "child"]
+                nodes = [n for (n, d) in G.nodes(data=True) if n != "root"]
+                nx.draw_networkx_nodes(G, pos, nodelist=nodes)
+                # nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dotted")
+                nx.draw_networkx_edges(G, pos, edgelist=ep_child, arrows=False, style="dashed")
+                nx.draw_networkx_edges(G, pos, edgelist=child)
+                nx.draw_networkx_labels(G, pos, labels=label_dict)
+                plt.show()
+                break
+            except:
+                print("WARNING: Drawing failed, trying different layout.")
+
     
     # Returns the whole layer as a list.
     # One node from the layer must be given
