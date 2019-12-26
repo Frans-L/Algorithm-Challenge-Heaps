@@ -4,11 +4,10 @@ class _Node:
     def __init__(self,key,val):
         self.key = key
         self.val = val
-        self.parent = None
-        self.child = None
+        self.parent = self.child = None
         self.left = self.right = self
         self.degree = 0
-        self.mark = False
+        self.flag = False
 
 class FibonacciHeap:
 
@@ -169,6 +168,51 @@ class FibonacciHeap:
             self.no_nodes -= 1
         return prev_min
 
+    # Sets a new value to the key of the node.
+    # new_key must lower than current key value.
+    def decrease_key(self, node, new_key):
+        assert node.key > new_key, \
+            "The new_key must be lower than current when decreasing key."
+
+        node.key = new_key
+        parent = node.parent
+
+        # root element, simple case
+        if parent is None:
+            if node.key < self.min.key:
+                self.min = node
+        # otherwise
+        elif node.key < parent.key:
+            self._cut(node)
+            self._cascading_cut(parent)
+
+    # Moves the node root level
+    def _cut(self, node):
+        parent = node.parent
+        parent.degree -= 1
+
+        # if parent has only 1 child
+        if parent.child == node and node.right == node:
+            parent.child = None
+            self._remove_node(node)
+        else:
+            parent.child = node.right
+            self._remove_node(node)
+        
+        # add to the root level
+        node.flag = False
+        self._add_node_left(node, self.min)
+    
+    # Reorganizing the heap to keep it in optimal form
+    def _cascading_cut(self, node):
+        parent = node.parent
+        if parent is not None:
+            if parent.flag:
+                self._cut(node)
+                self._cascading_cut(parent)
+            else:
+                parent.flag = True
+
     # Returns the whole layer as a list.
     # One node from the layer must be given
     def _layer_as_list(self, node):
@@ -180,6 +224,7 @@ class FibonacciHeap:
             items.append(n)
             n = n.right
         return items
+
 
     # Makes the degrees of root elements unique
     def _consolidate(self):
@@ -234,15 +279,22 @@ if __name__ == "__main__":
     # for n in nodes:
     #     f.insert(n)
 
-    n = f.insert(7)
-    f._debug_insert_child(n, 9)
-
+    m = f.insert(7)
+    n = f.insert(4)
     n = f.insert(2)
-    n2 = f._debug_insert_child(n, 4)
-    n2 = f._debug_insert_child(n2, 6)
-    
-    n2 = f._debug_insert_child(n, 3)
+    k = f.insert(8)
+    n = f.insert(12)
+    n = f.insert(5)
+   
+    f.delete_min()
+    print("min key", f.min.key)
+    f.visualize()
 
+    f.decrease_key(k, 6)
+    print("min key", f.min.key)
+    f.visualize()
+
+    f.decrease_key(m, 1)
     print("min key", f.min.key)
     f.visualize()
 
