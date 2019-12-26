@@ -1,5 +1,4 @@
 import math
-from misc_visualization import hierarchy_pos
 
 class _Node:
     def __init__(self,key,val):
@@ -23,6 +22,7 @@ class FibonacciHeap:
         import networkx as nx
         import matplotlib.pyplot as plt
         from collections import defaultdict
+        from misc_visualization import hierarchy_pos
         import queue
 
         G = nx.DiGraph()
@@ -55,14 +55,21 @@ class FibonacciHeap:
         self._debug_print_nodes()
 
         # drawing
-        pos = hierarchy_pos(G)
-        root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
-        child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "child"]
-        nx.draw_networkx_nodes(G, pos)
-        nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dashed")
-        nx.draw_networkx_edges(G, pos, edgelist=child)
-        nx.draw_networkx_labels(G, pos, labels=label_dict)
-        plt.show()
+        layouts = [hierarchy_pos, nx.spring_layout]
+        for f in layouts:
+            try:
+                pos = f(G)
+                # root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
+                child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "child"]
+                nodes = [n for (n, d) in G.nodes(data=True) if n != "root"]
+                nx.draw_networkx_nodes(G, pos, nodelist=nodes)
+                # nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dotted")
+                nx.draw_networkx_edges(G, pos, edgelist=child)
+                nx.draw_networkx_labels(G, pos, labels=label_dict)
+                plt.show()
+                break
+            except:
+                print("WARNING: Drawing failed, trying different layout.")
     
 
     # Inserts new node into the heap.
@@ -87,16 +94,16 @@ class FibonacciHeap:
 
     # Adds node to left side of the given right_node
     def _add_node_left(self, node, right_node):
-            node.right = right_node
-            node.left = right_node.left
-            right_node.left.right = node
-            right_node.left = node
+        node.right = right_node
+        node.left = right_node.left
+        right_node.left.right = node
+        right_node.left = node
 
     # Adds node to left side of the given right_node
     def _add_root(self, node):
-            self._add_node_left(node, self.min)
-            if node.key < self.min.key:
-                self.min = node
+        self._add_node_left(node, self.min)
+        if node.key < self.min.key:
+            self.min = node
 
     # Adds node as child to another node
     def _add_child(self, child, parent):
