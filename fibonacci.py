@@ -1,7 +1,8 @@
 import math
 
+
 class _Node:
-    def __init__(self,key,val):
+    def __init__(self, key, val):
         self.key = key
         self.val = val
         self.parent = self.child = None
@@ -9,8 +10,8 @@ class _Node:
         self.degree = 0
         self.flag = False
 
-class FibonacciHeap:
 
+class FibonacciHeap:
     def __init__(self):
         self.min = None
         self.no_nodes = 0
@@ -25,15 +26,15 @@ class FibonacciHeap:
         import queue
 
         G = nx.DiGraph()
-        label_dict = {} # maps nodes to labels
+        label_dict = {}  # maps nodes to labels
 
         # first nodes
         for n in self._debug_nodes:
             G.add_node(n)
-            label_dict[n] = f"{n.key}" 
-       
+            label_dict[n] = f"{n.key}"
+
         # parent -> child edges
-        isChild = set() # used to find root level
+        isChild = set()  # used to find root level
         for n in self._debug_nodes:
             c = n.child
             if c is not None:
@@ -41,14 +42,13 @@ class FibonacciHeap:
                 for m in childs:
                     isChild.add(m)
                     G.add_edge(n, m, style="child")
-        
+
         # parent edges
         G.add_node("root")
-        label_dict["root"] = f"" 
+        label_dict["root"] = f""
         for n in self._debug_nodes:
             if n not in isChild:
                 G.add_edge("root", n, style="root")
-
 
         # print info
         self._debug_print_nodes()
@@ -59,7 +59,8 @@ class FibonacciHeap:
             try:
                 pos = f(G)
                 # root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
-                child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "child"]
+                child = [(u, v) for (u, v, d)
+                         in G.edges(data=True) if d["style"] == "child"]
                 nodes = [n for (n, d) in G.nodes(data=True) if n != "root"]
                 nx.draw_networkx_nodes(G, pos, nodelist=nodes)
                 # nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dotted")
@@ -67,15 +68,14 @@ class FibonacciHeap:
                 nx.draw_networkx_labels(G, pos, labels=label_dict)
                 plt.show()
                 break
-            except:
+            except BaseException:
                 print("WARNING: Drawing failed, trying different layout.")
-    
 
     # Inserts new node into the heap.
     # Can be used with key and value
     # or only with key.
-    def insert(self, key, value = None):
-        if value is None: 
+    def insert(self, key, value=None):
+        if value is None:
             value = key
         n = _Node(key, value)
 
@@ -110,14 +110,14 @@ class FibonacciHeap:
             parent.child = child
             child.parent = parent
         else:
-            self._add_node_left(child,parent.child)
+            self._add_node_left(child, parent.child)
             child.parent = parent
         parent.degree += 1
 
     # Inserts new node as a child
     # Heap do not allow this, but this is only used for debugging
-    def _debug_insert_child(self, parent, key, value = None):
-        if value is None: 
+    def _debug_insert_child(self, parent, key, value=None):
+        if value is None:
             value = key
         n = _Node(key, value)
         self.no_nodes += 1
@@ -152,7 +152,7 @@ class FibonacciHeap:
                     self._add_node_left(n, self.min)
                     n.parent = None
                     n = next_node
-            
+
             # remove current min
             self._debug_nodes.remove(self.min)
             if self.min.right != self.min:
@@ -163,7 +163,6 @@ class FibonacciHeap:
             else:
                 self.min = None
                 self._remove_node(prev_min)
-                
 
             self.no_nodes -= 1
         return prev_min
@@ -171,8 +170,9 @@ class FibonacciHeap:
     # Sets a new value to the key of the node.
     # new_key must lower than current key value.
     def decrease_key(self, node, new_key):
-        assert node.key > new_key, \
-            "The new_key must be lower than current when decreasing key."
+        assert (
+            node.key > new_key
+        ), "The new_key must be lower than current when decreasing key."
 
         node.key = new_key
         parent = node.parent
@@ -198,11 +198,13 @@ class FibonacciHeap:
         else:
             parent.child = node.right
             self._remove_node(node)
-        
+
         # add to the root level
         node.flag = False
         self._add_node_left(node, self.min)
-    
+        if node.key < self.min.key:
+            self.min = node
+
     # Reorganizing the heap to keep it in optimal form
     def _cascading_cut(self, node):
         parent = node.parent
@@ -225,17 +227,16 @@ class FibonacciHeap:
             n = n.right
         return items
 
-
     # Makes the degrees of root elements unique
     def _consolidate(self):
-        degree_arr = [None for _ in range(int(math.log(self.no_nodes, 2))+1)]
-        
+        degree_arr = [None for _ in range(int(math.log(self.no_nodes, 2)) + 1)]
+
         root_items = self._layer_as_list(self.min)
         for n in root_items:
 
             degree = n.degree
-            # combines nodes until no same root degrees exists 
-            while degree_arr[degree] != None:
+            # combines nodes until no same root degrees exists
+            while degree_arr[degree] is not None:
                 m = degree_arr[degree]
                 # makes sure that n is always smaller
                 if m.key < n.key:
@@ -260,7 +261,7 @@ class FibonacciHeap:
     def _update_root_min(self):
         top = self._find_root_item()
         root_layer = self._layer_as_list(top)
-        self.min = min(root_layer, key = lambda n: n.key)
+        self.min = min(root_layer, key=lambda n: n.key)
 
     def _debug_print_nodes(self):
         for n in self._debug_nodes:
@@ -270,6 +271,7 @@ class FibonacciHeap:
             if n.child is not None:
                 output += f" c: {n.child.key}"
             print(output)
+
 
 if __name__ == "__main__":
 
@@ -285,7 +287,7 @@ if __name__ == "__main__":
     k = f.insert(8)
     n = f.insert(12)
     n = f.insert(5)
-   
+
     f.delete_min()
     print("min key", f.min.key)
     f.visualize()
@@ -295,7 +297,7 @@ if __name__ == "__main__":
     f.visualize()
 
     f.decrease_key(m, 1)
-    print("min key", f.min.key)
+    print("min key", f.min.key, 1)
     f.visualize()
 
     for i in range(3):

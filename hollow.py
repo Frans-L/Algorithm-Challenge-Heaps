@@ -1,18 +1,21 @@
 import math
 
+
 class _Node:
-    def __init__(self,key,val):
+    def __init__(self, key, val):
         self.key = key
         self.item = _Item(val, self)
         self.child = None
         self.right = None
-        self.ep = None # extra parent, only hollow can have it
+        self.ep = None  # extra parent, only hollow can have it
         self.rank = 0
 
+
 class _Item:
-    def __init__(self,val,node):
+    def __init__(self, val, node):
         self.val = val
         self.node = node
+
 
 class HollowHeap:
 
@@ -31,16 +34,15 @@ class HollowHeap:
         import queue
 
         G = nx.DiGraph()
-        label_dict = {} # maps nodes to labels
+        label_dict = {}  # maps nodes to labels
 
         # first nodes
         for n in self._debug_nodes:
             G.add_node(n)
             label_dict[n] = f"{n.key}" if n.item is not None else "H"
-            
-       
+
         # parent -> child edges
-        isChild = set() # used to find root level
+        isChild = set()  # used to find root level
         for n in self._debug_nodes:
             c = n.child
             if c is not None:
@@ -53,7 +55,7 @@ class HollowHeap:
                         G.add_edge(n, m, style="ep_child")
 
         G.add_node("root")
-        label_dict["root"] = f"" 
+        label_dict["root"] = f""
         for n in self._debug_nodes:
             if n not in isChild:
                 G.add_edge("root", n, style="root")
@@ -67,20 +69,24 @@ class HollowHeap:
             try:
                 pos = f(G)
                 # root = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "root"]
-                ep_child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "ep_child"]
-                child = [(u, v) for (u, v, d) in G.edges(data=True) if d['style'] == "child"]
+                ep_child = [
+                    (u, v) for (u, v, d) in G.edges(
+                        data=True) if d['style'] == "ep_child"]
+                child = [
+                    (u, v) for (u, v, d) in G.edges(
+                        data=True) if d['style'] == "child"]
                 nodes = [n for (n, d) in G.nodes(data=True) if n != "root"]
                 nx.draw_networkx_nodes(G, pos, nodelist=nodes)
                 # nx.draw_networkx_edges(G, pos, edgelist=root, arrows=False, style="dotted")
-                nx.draw_networkx_edges(G, pos, edgelist=ep_child, arrows=False, style="dashed")
+                nx.draw_networkx_edges(
+                    G, pos, edgelist=ep_child, arrows=False, style="dashed")
                 nx.draw_networkx_edges(G, pos, edgelist=child)
                 nx.draw_networkx_labels(G, pos, labels=label_dict)
                 plt.show()
                 break
-            except:
+            except BaseException:
                 print("WARNING: Drawing failed, trying different layout.")
 
-    
     # Returns the whole layer as a list.
     # One node from the layer must be given
     def _layer_as_list(self, node):
@@ -101,13 +107,13 @@ class HollowHeap:
         node = None
 
         # lazy deletion
-        if self.min.item != None: 
+        if self.min.item is not None:
             return self.min
 
         self._debug_nodes.remove(self.min)
-        
-        A = [None] * (self.max_rank + self.no_nodes + 256) # rank max size
-        h = self.min # use same naming as in pseudo code
+
+        A = [None] * (self.max_rank + self.no_nodes + 256)  # rank max size
+        h = self.min  # use same naming as in pseudo code
         h.right = None
         while h is not None:
             w = h.child
@@ -134,7 +140,7 @@ class HollowHeap:
                     # does ranked links
                     # similiar to fibonacci heap, unique ranks
                     while A[u.rank] is not None:
-                        u = self._link(u,A[u.rank])
+                        u = self._link(u, A[u.rank])
                         A[u.rank] = None
                         u.rank += 1
                     A[u.rank] = u
@@ -148,7 +154,7 @@ class HollowHeap:
                 if h is None:
                     h = A[i]
                 else:
-                    h = self._link(h,A[i]) # returns the smaller one
+                    h = self._link(h, A[i])  # returns the smaller one
                 A[i] = None
 
         # update the min
@@ -156,7 +162,6 @@ class HollowHeap:
         if self.min is not None:
             self.min.right = None
         return self.min
-
 
     # Sets a new value to the key of the node.
     # new_key must lower than current key value.
@@ -167,13 +172,13 @@ class HollowHeap:
         assert node.item is not None, \
             "The node is missing item. It's hollow. Cannot be decreased."
 
-        u = node # same naming as in pseudo code
+        u = node  # same naming as in pseudo code
 
         # decreasing min value, simple cases
         if u == self.min:
             u.key = new_key
             return self.min
-        
+
         # otherwise
         v = _Node(new_key, u.item.val)
         self._debug_nodes.add(v)
@@ -189,12 +194,11 @@ class HollowHeap:
             self.min = h
         return h
 
-
     # Inserts new node into the heap.
     # Can be used with key and value
     # or only with key.
-    def insert(self, key, value = None):
-        if value is None: 
+    def insert(self, key, value=None):
+        if value is None:
             value = key
 
         n = _Node(key, value)
@@ -205,8 +209,8 @@ class HollowHeap:
 
     # Inserts new node as a child
     # Heap do not allow this, but this is only used for debugging
-    def _debug_insert_child(self, parent, key, value = None):
-        if value is None: 
+    def _debug_insert_child(self, parent, key, value=None):
+        if value is None:
             value = key
 
         n = _Node(key, value)
@@ -215,26 +219,26 @@ class HollowHeap:
         self.no_nodes += 1
         return n
 
-    # Combines safely two hollow heaps 
+    # Combines safely two hollow heaps
     def _meld(self, n, m):
         if n is None:
             return m
         if m is None:
             return n
-        return self._link(n,m)
+        return self._link(n, m)
 
     # Makes given node to be a child of another given node
     def _add_child(self, child, parent):
         child.right = parent.child
         parent.child = child
-      
+
     # Links two nodes together
     def _link(self, n, m):
         if m.key > n.key:
-            self._add_child(m,n)
+            self._add_child(m, n)
             return n
         else:
-            self._add_child(n,m)
+            self._add_child(n, m)
             return m
 
     # Prints information of nodes
@@ -248,6 +252,7 @@ class HollowHeap:
             if n.ep is not None:
                 output += f" ep: {n.ep.key}"
             print(output)
+
 
 if __name__ == "__main__":
 
@@ -275,7 +280,7 @@ if __name__ == "__main__":
     f.delete(k)
     print("min", f.min.key)
     f.vizualize()
-   
+
     f.delete(m)
     print("min", f.min.key)
     f.vizualize()
@@ -289,4 +294,3 @@ if __name__ == "__main__":
     #     f.delete_min()
     #     print("min", f.min.key)
     #     f.vizualize()
-        
