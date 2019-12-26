@@ -1,4 +1,4 @@
-# NOTE: In this project, used only to vizualize the data.
+# NOTE: In this project, this is used only to vizualize the data.
 # Licensed under Creative Commons Attribution-Share Alike
 
 import networkx as nx
