@@ -23,13 +23,15 @@ class HollowHeap(heap.Heap):
         self.max_rank = 0
         self.no_nodes = 0
 
-    # Returns the min node
+    # Returns the minimum node
+    # Amortized time complexity: O(1)
     def find_min(self):
         return self.min
 
-    # Inserts new node into the heap.
-    # Can be used with key and value
-    # or only with key.
+    # Inserts new item as a node to the heap.
+    # Can be called with key (key) or value and key (key, value).
+    # Returns the node.
+    # Amortized time complexity: O(1)
     def insert(self, key, value=None):
         if value is None:
             value = key
@@ -39,11 +41,15 @@ class HollowHeap(heap.Heap):
         self.no_nodes += 1
         return n
 
-    # Deletes and returns the min node
+    # Deletes and returns the minimum node
+    # Amortized time complexity: O(log n)
     def delete_min(self):
+        prev_min = self.min
         self.delete(self.min)
+        return prev_min
 
     # Deletes the given node
+    # Amortized time complexity: O(log n)
     def delete(self, node):
         node.item = None
         node = None
@@ -101,11 +107,11 @@ class HollowHeap(heap.Heap):
         self.min = h
         if self.min is not None:
             self.min.right = None
-        return self.min
 
-    # Sets a new value to the key of the node.
+    # Decrease the value of the key of the given nodes.
     # new_key must lower than current key value.
-    # node must have an item, cannot be hollow.
+    # Returns the updated node.
+    # Amortized time complexity: O(1)
     def decrease_key(self, node, new_key):
         assert (
             node.key > new_key
@@ -136,20 +142,11 @@ class HollowHeap(heap.Heap):
         return v
 
     # Merges another heap into this heap
+    # Amortized time complexity: O(1)
     def merge(self, heap):
         assert isinstance(heap, HollowHeap)
         self.min = self._meld(self.min, heap.min)
         self.no_nodes += heap.no_nodes
-
-    # Returns the whole layer as a list.
-    # One node from the layer must be given
-    def _layer_as_list(self, node):
-        nodes = []
-        n = node
-        while n is not None:
-            nodes.append(n)
-            n = n.right
-        return nodes
 
     # Inserts new node as a child
     # Heap do not allow this, but this is only used for debugging

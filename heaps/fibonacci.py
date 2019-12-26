@@ -17,13 +17,15 @@ class FibonacciHeap(heap.Heap):
         self.min = None
         self.no_nodes = 0
 
-    # Returns the min node
+    # Returns the minimum node
+    # Amortized time complexity: O(1)
     def find_min(self):
         return self.min
 
-    # Inserts a new element into the heap.
-    # Can be used with key and value
-    # or only with key.
+    # Inserts new item as a node to the heap.
+    # Can be called with key (key) or value and key (key, value).
+    # Returns the node.
+    # Amortized time complexity: O(1)
     def insert(self, key, value=None):
         if value is None:
             value = key
@@ -41,12 +43,14 @@ class FibonacciHeap(heap.Heap):
         return n
 
     # Deletes the given node
+    # Amortized time complexity: O(log n)
     def delete(self, node):
         assert self.min is not None
         self.decrease_key(node, self.min.key - 1)
         self.delete_min()
 
-    # Removes and returns the current min element
+    # Deletes and returns the minimum node
+    # Amortized time complexity: O(log n)
     def delete_min(self):
         prev_min = self.min
         if prev_min is not None:
@@ -75,8 +79,10 @@ class FibonacciHeap(heap.Heap):
             self.no_nodes -= 1
         return prev_min
 
-    # Decrease the value of the key of the given nodes
+    # Decrease the value of the key of the given nodes.
     # new_key must lower than current key value.
+    # Returns the updated node.
+    # Amortized time complexity: O(1)
     def decrease_key(self, node, new_key):
         assert (
             node.key > new_key
@@ -97,6 +103,7 @@ class FibonacciHeap(heap.Heap):
         return node
 
     # Merges another heap into this heap
+    # Amortized time complexity: O(1)
     def merge(self, heap):
         assert isinstance(heap, FibonacciHeap)
 

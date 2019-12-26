@@ -8,29 +8,36 @@ class HeapNode:
 # Abstract interface for heaps
 class Heap:
 
-    # Inserts new element to a nodes
-    # Can be used with key and value
-    # or only with key.
-    def insert(self, key, value=None):
-        raise NotImplementedError
-
-    # Returns the min node
+    # Returns the minimum node
+    # Amortized time complexity: O(1)
     def find_min(self):
         raise NotImplementedError
 
+    # Inserts new item as a node to the heap.
+    # Can be called with key (key) or value and key (key, value).
+    # Returns the node.
+    # Amortized time complexity: O(1)
+    def insert(self, key, value=None):
+        raise NotImplementedError
+
     # Deletes the given node
+    # Amortized time complexity: O(log n)
     def delete(self, node):
         raise NotImplementedError
 
-    # Deletes and returns the min node
+    # Deletes and returns the minimum node
+    # Amortized time complexity: O(log n)
     def delete_min(self):
         raise NotImplementedError
 
-    # Merges another heap into this heap
-    def merge(self, heap):
+    # Decrease the value of the key of the given nodes.
+    # new_key must lower than current key value.
+    # Returns the updated node.
+    # Amortized time complexity: O(1)
+    def decrease_key(self, node, new_key):
         raise NotImplementedError
 
-    # Decrease the value of the key of the given nodes
-    # new_key must lower than current key value.
-    def decrease_key(self, node, new_key):
+    # Merges another heap into this heap
+    # Amortized time complexity: O(1)
+    def merge(self, heap):
         raise NotImplementedError
