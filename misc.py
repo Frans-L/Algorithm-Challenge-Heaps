@@ -1,5 +1,8 @@
-# NOTE: In this project, this is used only to vizualize the data.
+# NOTE: THIS IS ONLY FILE THAT IS NOT CREATED BY ME.
+# This is only used to help drawing the graphs.
+
 # Licensed under Creative Commons Attribution-Share Alike
+# https://stackoverflow.com/a/29597209/2966723
 
 import networkx as nx
 import random
