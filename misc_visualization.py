@@ -53,8 +53,8 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, leaf_vs_
 
     xcenter: horizontal location of root
     '''
-    if not nx.is_tree(G):
-        raise TypeError('cannot use hierarchy_pos on a graph that is not a tree')
+    # if not nx.is_tree(G):
+    #    raise TypeError('cannot use hierarchy_pos on a graph that is not a tree')
 
     if root is None:
         if isinstance(G, nx.DiGraph):
