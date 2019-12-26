@@ -158,7 +158,7 @@ class HollowHeap:
         return self.min
 
 
-    # Decreases the key of the node.
+    # Sets a new value to the key of the node.
     # new_key must lower than current key value.
     # node must have an item, cannot be hollow.
     def decrease_key(self, node, new_key):
