@@ -58,7 +58,6 @@ class HollowHeap:
             if n not in isChild:
                 G.add_edge("root", n, style="root")
 
-
         # print info
         self._debug_print_nodes()
 
@@ -258,9 +257,9 @@ if __name__ == "__main__":
     # for n in nodes:
     #     f.insert(n)
 
-    n = f.insert(7)
+    k = f.insert(7)
     n = f.insert(3)
-    n = f.insert(10)
+    m = f.insert(10)
     # f._debug_insert_child(n, 11)
     n = f.insert(12)
     # f._debug_insert_child(n, 15)
@@ -268,12 +267,26 @@ if __name__ == "__main__":
     n = f.insert(4)
     n = f.insert(9)
 
+    f.delete_min()
+
+    print("min", f.min.key)
+    f.vizualize()
+
+    f.delete(k)
     print("min", f.min.key)
     f.vizualize()
    
-    for i in range(3):
-        print("----")
-        f.delete_min()
-        print("min", f.min.key)
-        f.vizualize()
+    f.delete(m)
+    print("min", f.min.key)
+    f.vizualize()
+
+    f.delete_min()
+    print("min", f.min.key)
+    f.vizualize()
+
+    # for i in range(3):
+    #     print("----")
+    #     f.delete_min()
+    #     print("min", f.min.key)
+    #     f.vizualize()
         
