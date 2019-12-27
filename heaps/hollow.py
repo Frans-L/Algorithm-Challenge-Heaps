@@ -20,7 +20,6 @@ class _Item:
 class HollowHeap(heap.Heap):
     def __init__(self):
         self.min = None
-        self.max_rank = 0
         self.no_nodes = 0
 
     # Returns the minimum node
@@ -59,7 +58,7 @@ class HollowHeap(heap.Heap):
             self.no_nodes -= 1
             return self.min
 
-        A = [None] * (self.max_rank * 2 + self.no_nodes)  # rank max size
+        A = {}
         h = self.min  # use same naming as in pseudo code
         h.right = None
         while h is not None:
@@ -86,23 +85,19 @@ class HollowHeap(heap.Heap):
                 else:
                     # does ranked links
                     # similiar to fibonacci heap, unique ranks
-                    while A[u.rank] is not None:
+                    while u.rank in A:
                         u = self._link(u, A[u.rank])
-                        A[u.rank] = None
+                        del A[u.rank]
                         u.rank += 1
                     A[u.rank] = u
-                    if u.rank > self.max_rank:
-                        self.max_rank = u.rank
 
         # does unranked links
         # combines subtrees with unique rank and finds the root, aka min
-        for i in range(self.max_rank + 1):
-            if A[i] is not None:
-                if h is None:
-                    h = A[i]
-                else:
-                    h = self._link(h, A[i])  # returns the smaller one
-                A[i] = None
+        for i in A:
+            if h is None:
+                h = A[i]
+            else:
+                h = self._link(h, A[i])  # returns the smaller one
 
         self.no_nodes -= 1
         # update the min
