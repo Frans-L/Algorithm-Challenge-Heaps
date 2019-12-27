@@ -217,8 +217,7 @@ class FibonacciHeap(heap.Heap):
 
     # Makes the degrees of root elements unique
     def _consolidate(self):
-        degree_arr = [None for _ in range(int(math.log(self.no_nodes, 2)) + 1)]
-
+        degree_arr = [None for _ in range(int(math.log(self.no_nodes, 2)) + 2)]
         root_items = self._layer_as_list(self.min)
         for n in root_items:
 
