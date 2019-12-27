@@ -6,7 +6,7 @@ from collections import defaultdict
 import queue
 
 # Draws a heap as a graph
-def visualize(_heap, title="Heap", debug_print=True):
+def visualize(_heap, title="Heap", debug_print=True, file_name=None):
     assert isinstance(_heap, heap.Heap), "Heap must inherit Heap class."
 
     nodes = find_nodes(_heap)  # get all nodes
@@ -82,6 +82,10 @@ def visualize(_heap, title="Heap", debug_print=True):
             nx.draw_networkx_labels(G, pos, labels=label_dict)
 
             plt.title(title)
+
+            if file_name is not None:
+                plt.savefig(f"visual_output/{file_name}")
+
             plt.show()
             break  # no need to try another layout
         except BaseException:
