@@ -1,5 +1,6 @@
-# NOTE: THIS IS ONLY FILE THAT IS NOT CREATED BY ME.
-# This is only used to help drawing the graphs.
+# NOTE: THIS IS THE ONLY FILE THAT IS NOT CREATED BY ME.
+# This is used for the visualization. The function calculates
+# the positions of the nodes for the tree visualization
 
 # Licensed under Creative Commons Attribution-Share Alike
 # https://stackoverflow.com/a/29597209/2966723
