@@ -96,8 +96,23 @@ def mixed_test(heap_type, scale):
     print("Mixed", end - start)
 
 
+def find_min(heap_type, scale):
+    random.seed(1)
+    heap = heap_type()
+    for _ in range(scale):
+        heap.insert(random.random())
+
+    start = timeit.default_timer()
+    for _ in range(scale):
+        heap.find_min()
+    end = timeit.default_timer()
+
+    print("Find_min:", end - start)
+
+
 def all_tests(heap_type):
     scale = 10 ** 5
+    find_min(heap_type, scale)
     insert_test(heap_type, scale)
     delete_test(heap_type, scale)
     delete_min_test(heap_type, scale)
