@@ -50,6 +50,9 @@ class HollowHeap(heap.Heap):
     # Deletes the given node
     # Amortized time complexity: O(log n)
     def delete(self, node):
+        if node is None:
+            return
+
         node.item = None
         node = None
 
