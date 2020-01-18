@@ -5,7 +5,7 @@ class HeapNode:
     child = None
 
 
-# Abstract interface for heaps
+# Abstract interface of the heap
 class Heap:
 
     # Returns the minimum node

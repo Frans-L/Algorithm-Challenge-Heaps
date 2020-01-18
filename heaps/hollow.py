@@ -2,6 +2,7 @@ import math
 import heaps.abstract_heap as heap
 
 
+# Implementation of https://arxiv.org/abs/1510.06535
 class _Node(heap.HeapNode):
     def __init__(self, key, val):
         self.key = key
@@ -74,7 +75,7 @@ class HollowHeap(heap.Heap):
                 u = w
                 w = w.right
 
-                # if hallow
+                # if hollow
                 if u.item is None:
                     if u.ep is None:
                         u.right = h

@@ -12,6 +12,7 @@ class _Node(heap.HeapNode):
         self.flag = False
 
 
+# Implementation of https://en.wikipedia.org/wiki/Fibonacci_heap
 class FibonacciHeap(heap.Heap):
     def __init__(self):
         self.min = None
