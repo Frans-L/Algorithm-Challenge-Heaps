@@ -1,14 +1,15 @@
 # Fibonacci Heap & Hollow Heap
 
-Python 3 implementations of a Fibonacci heap and a Hollow heap.
+Python 3 implementations of a Fibonacci heap and a Hollow heap. The both heaps have exceptional low amortised running times.
 
-Both are data structures for priority queue operations, in which you can find e.g. the minimum value with time complexity O(1).
+The Hollow Heap implementation is based on the paper [Hollow Heaps](https://arxiv.org/abs/1510.06535) (2015) by Thomas Dueholm Hansen, Haim Kaplan, Robert E. Tarjan & Uri Zwick.
+
+The Fibonacci Heap implementation a is well-known algorithm from the the paper [Fibonacci Heaps And Their Uses In Improved Network Optimization Algorithms](https://ieeexplore.ieee.org/document/715934) (1984) by
+Michael L. Fredman and Robert E. Tarjan.
 
 ### Amortized Time Complexity
 
-The special thing about Fibonacci Heap and Hollow Heap is their low amortized time complexity.
-
-For instance, the amortized running times are lower than _binary heap_ or _binomial heap_ has.
+The special thing about Fibonacci Heap and Hollow Heap is their low amortized time complexity. Their amortized running times are lower than _binary heap_ or _binomial heap_ has.
 
 | Method       | Fibonacci | Hollow   | Binary   | Binomial |
 | ------------ | --------- | -------- | -------- | -------- |
@@ -25,7 +26,7 @@ The Fibonacci heap uses multiple trees. Every node has degree at most _log(n)_ a
 Here is a visualiation of the Fibonacci heap when nodes are deleted.
 
 <p align="center">
-  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibo/blob/master/visualize/fibonacci.gif?raw=true" alt="Deleting nodes"/>
+  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/fibonacci.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
 ### Hollow Heap
@@ -35,7 +36,7 @@ The Hollow heap achives the same running times as the Fibonacci heap by using la
 Here is a visualiation of the Hollow heap when nodes are deleted.
 
 <p align="center">
-  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibo/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
+  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
 ### How To Use
@@ -50,23 +51,23 @@ heap = FibonacciHeap()  # = HollowHeap()
 # Insert a node with properties
 #   key = 10
 #   val = 10
-node10 = heap.insert(10)
+nodeA = heap.insert(10)
 
 # Insert a node with properties
 #   key = 12
 #   val = "B"
 nodeB = heap.insert(12, "B")
 
-# Return the smallest node, node10
+# Return the smallest node -> nodeA
 n = heap.find_min()
 
-# Decrease the key of node nodeB
+# Decrease the key of nodeB from 12 to 3
 nodeB = heap.decrease_key(nodeB, 3)
 
 # Delete the nodeB
 heap.delete(nodeB)
 
-# Delete the min node, node10
+# Delete the min node -> nodeA
 heap.delete_min()
 
 # Merge heap2 into heap
