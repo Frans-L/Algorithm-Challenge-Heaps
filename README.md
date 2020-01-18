@@ -2,9 +2,9 @@
 
 Python 3 implementations of a Fibonacci heap and a Hollow heap. The both heaps have exceptional low amortised running times.
 
-The Hollow Heap implementation is based on the paper [Hollow Heaps](https://arxiv.org/abs/1510.06535) (2015) by Thomas Dueholm Hansen, Haim Kaplan, Robert E. Tarjan & Uri Zwick.
+The Hollow heap implementation is based on the paper [Hollow Heaps](https://arxiv.org/abs/1510.06535) (2015) by Thomas Dueholm Hansen, Haim Kaplan, Robert E. Tarjan & Uri Zwick.
 
-The Fibonacci Heap implementation a is well-known algorithm from the the paper [Fibonacci Heaps And Their Uses In Improved Network Optimization Algorithms](https://ieeexplore.ieee.org/document/715934) (1984) by
+The Fibonacci heap implementation a is well-known algorithm from the the paper [Fibonacci Heaps And Their Uses In Improved Network Optimization Algorithms](https://ieeexplore.ieee.org/document/715934) (1984) by
 Michael L. Fredman and Robert E. Tarjan.
 
 ### Amortized Time Complexity
