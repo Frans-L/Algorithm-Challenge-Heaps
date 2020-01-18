@@ -1,5 +1,5 @@
 import math
-import heaps.abstract_heap as heap
+import abstract_heap as heap
 
 
 class _Node(heap.HeapNode):
@@ -12,20 +12,21 @@ class _Node(heap.HeapNode):
         self.flag = False
 
 
-# Implementation of https://en.wikipedia.org/wiki/Fibonacci_heap
+# Implementation of FibonacciHeap.
+# https://en.wikipedia.org/wiki/Fibonacci_heap
 class FibonacciHeap(heap.Heap):
     def __init__(self):
         self.min = None
         self.no_nodes = 0
 
-    # Returns the minimum node
+    # Return the minimum node.
     # Amortized time complexity: O(1)
     def find_min(self):
         return self.min
 
-    # Inserts new item as a node to the heap.
+    # Insert new item as a node to the heap.
     # Can be called with key (key) or value and key (key, value).
-    # Returns the node.
+    # Return the node.
     # Amortized time complexity: O(1)
     def insert(self, key, value=None):
         if value is None:
@@ -43,14 +44,14 @@ class FibonacciHeap(heap.Heap):
 
         return n
 
-    # Deletes the given node
+    # Delete the given node.
     # Amortized time complexity: O(log n)
     def delete(self, node):
         assert self.min is not None
         self.decrease_key(node, self.min.key - 1)
         self.delete_min()
 
-    # Deletes and returns the minimum node
+    # Delete and returns the minimum node.
     # Amortized time complexity: O(log n)
     def delete_min(self):
         prev_min = self.min
@@ -80,9 +81,44 @@ class FibonacciHeap(heap.Heap):
             self.no_nodes -= 1
         return prev_min
 
+    # Make the degrees of root elements unique, fibonacci sequence
+    def _consolidate(self):
+        degree_arr = [None for _ in range(int(math.log(self.no_nodes, 2)) + 2)]
+        root_items = self._layer_as_list(self.min)
+        for n in root_items:
+
+            degree = n.degree
+            # combine nodes until no same root degrees exists
+            while degree_arr[degree] is not None:
+                m = degree_arr[degree]
+                # make sure that n is always smaller
+                if m.key < n.key:
+                    n, m = self._swap_vars(n, m)
+                self._remove_node(m)
+                self._add_child(m, n)
+                degree_arr[degree] = None
+                degree += 1
+
+            degree_arr[degree] = n
+
+        self._update_root_min()
+
+    # Update self.min to lowest value from the root
+    def _update_root_min(self):
+        top = self._find_root_item()
+        root_layer = self._layer_as_list(top)
+        self.min = min(root_layer, key=lambda n: n.key)
+
+    # Return an item from root layer
+    def _find_root_item(self):
+        top_item = self.min
+        while top_item.parent is not None:
+            top_item = top_item.parent
+        return top_item
+
     # Decrease the value of the key of the given nodes.
     # new_key must lower than current key value.
-    # Returns the updated node.
+    # Return the updated node.
     # Amortized time complexity: O(1)
     def decrease_key(self, node, new_key):
         assert (
@@ -103,79 +139,7 @@ class FibonacciHeap(heap.Heap):
 
         return node
 
-    # Merges another heap into this heap
-    # Amortized time complexity: O(1)
-    def merge(self, heap):
-        assert isinstance(heap, FibonacciHeap)
-
-        # if a heap is empty
-        if heap.min is None:
-            return
-        if self.min is None:
-            self.min = heap.min
-            return
-
-        # moves given heap between min and min.right
-        first = self.min
-        last = self.min.right
-        second = heap.min
-        second_last = heap.min.left
-
-        first.right = second
-        second.left = first
-        last.left = second_last
-        second_last.right = last
-
-        self.no_nodes += heap.no_nodes
-        if heap.min.key < self.min.key:
-            self.min = heap.min
-
-    # Adds node to left side of the given right_node
-    def _add_node_left(self, node, right_node):
-        node.right = right_node
-        node.left = right_node.left
-        right_node.left.right = node
-        right_node.left = node
-
-    # Adds node to left side of the given right_node
-    def _add_root(self, node):
-        self._add_node_left(node, self.min)
-        if node.key < self.min.key:
-            self.min = node
-
-    # Adds node as child to another node
-    def _add_child(self, child, parent):
-        if parent.child is None:
-            parent.child = child
-            child.parent = parent
-        else:
-            self._add_node_left(child, parent.child)
-            child.parent = parent
-        parent.degree += 1
-
-    # Inserts new node as a child
-    # Heap do not allow this, but this is only used for debugging
-    def _debug_insert_child(self, parent, key, value=None):
-        if value is None:
-            value = key
-        n = _Node(key, value)
-        self.no_nodes += 1
-        self._add_child(n, parent)
-        return n
-
-    # Swaps variables
-    def _swap_vars(self, var1, var2):
-        return (var2, var1)
-
-    # Removes element from the double linked list
-    def _remove_node(self, node):
-        node.left.right = node.right
-        node.right.left = node.left
-        node.left = node
-        node.right = node
-        node.parent = None
-
-    # Moves the node root level
+    # Move the node root level
     def _cut(self, node):
         parent = node.parent
         parent.degree -= 1
@@ -194,7 +158,7 @@ class FibonacciHeap(heap.Heap):
         if node.key < self.min.key:
             self.min = node
 
-    # Reorganizing the heap to keep it in optimal form
+    # Reorganize the heap to keep it in optimal form
     def _cascading_cut(self, node):
         parent = node.parent
         if parent is not None:
@@ -204,7 +168,71 @@ class FibonacciHeap(heap.Heap):
             else:
                 parent.flag = True
 
-    # Returns the whole layer as a list.
+    # Merge another heap into this heap.
+    # Amortized time complexity: O(1)
+    def merge(self, heap):
+        assert isinstance(heap, FibonacciHeap)
+
+        # if a heap is empty
+        if heap.min is None:
+            return
+        if self.min is None:
+            self.min = heap.min
+            return
+
+        # move given heap between min and min.right
+        # self.first <-> heap.first <-> ... <-> heap.last   <-> self.last
+        # first      <-> second     <-> ... <-> second_last <-> last
+        first = self.min
+        last = self.min.right
+        second = heap.min
+        second_last = heap.min.left
+
+        first.right = second
+        second.left = first
+        last.left = second_last
+        second_last.right = last
+
+        self.no_nodes += heap.no_nodes
+        if heap.min.key < self.min.key:
+            self.min = heap.min
+
+    # Add node to left side of the given right_node
+    def _add_node_left(self, node, right_node):
+        node.right = right_node
+        node.left = right_node.left
+        right_node.left.right = node
+        right_node.left = node
+
+    # Add node to left side of the given right_node
+    def _add_root(self, node):
+        self._add_node_left(node, self.min)
+        if node.key < self.min.key:
+            self.min = node
+
+    # Add node as child to another node
+    def _add_child(self, child, parent):
+        if parent.child is None:
+            parent.child = child
+            child.parent = parent
+        else:
+            self._add_node_left(child, parent.child)
+            child.parent = parent
+        parent.degree += 1
+
+    # Swap variables
+    def _swap_vars(self, var1, var2):
+        return (var2, var1)
+
+    # Remove element from the double linked list
+    def _remove_node(self, node):
+        node.left.right = node.right
+        node.right.left = node.left
+        node.left = node
+        node.right = node
+        node.parent = None
+
+    # Return the whole layer as a list.
     # One node from the layer must be given
     def _layer_as_list(self, node):
         items = []
@@ -215,38 +243,3 @@ class FibonacciHeap(heap.Heap):
             items.append(n)
             n = n.right
         return items
-
-    # Makes the degrees of root elements unique
-    def _consolidate(self):
-        degree_arr = [None for _ in range(int(math.log(self.no_nodes, 2)) + 2)]
-        root_items = self._layer_as_list(self.min)
-        for n in root_items:
-
-            degree = n.degree
-            # combines nodes until no same root degrees exists
-            while degree_arr[degree] is not None:
-                m = degree_arr[degree]
-                # makes sure that n is always smaller
-                if m.key < n.key:
-                    n, m = self._swap_vars(n, m)
-                self._remove_node(m)
-                self._add_child(m, n)
-                degree_arr[degree] = None
-                degree += 1
-
-            degree_arr[degree] = n
-
-        self._update_root_min()
-
-    # Return an item from root layer
-    def _find_root_item(self):
-        top_item = self.min
-        while top_item.parent is not None:
-            top_item = top_item.parent
-        return top_item
-
-    # Updates self.min to lowest value from the root
-    def _update_root_min(self):
-        top = self._find_root_item()
-        root_layer = self._layer_as_list(top)
-        self.min = min(root_layer, key=lambda n: n.key)

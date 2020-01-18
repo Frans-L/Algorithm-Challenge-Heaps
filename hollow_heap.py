@@ -1,8 +1,7 @@
 import math
-import heaps.abstract_heap as heap
+import abstract_heap as heap
 
 
-# Implementation of https://arxiv.org/abs/1510.06535
 class _Node(heap.HeapNode):
     def __init__(self, key, val):
         self.key = key
@@ -18,19 +17,21 @@ class _Item:
         self.node = node
 
 
+# Implementation of Hollow Heap
+# https://arxiv.org/abs/1510.06535
 class HollowHeap(heap.Heap):
     def __init__(self):
         self.min = None
         self.no_nodes = 0
 
-    # Returns the minimum node
+    # Return the minimum node.
     # Amortized time complexity: O(1)
     def find_min(self):
         return self.min
 
-    # Inserts new item as a node to the heap.
+    # Insert new item as a node to the heap.
     # Can be called with key (key) or value and key (key, value).
-    # Returns the node.
+    # Return the node.
     # Amortized time complexity: O(1)
     def insert(self, key, value=None):
         if value is None:
@@ -41,14 +42,14 @@ class HollowHeap(heap.Heap):
         self.no_nodes += 1
         return n
 
-    # Deletes and returns the minimum node
+    # Delete and returns the minimum node.
     # Amortized time complexity: O(log n)
     def delete_min(self):
         prev_min = self.min
         self.delete(self.min)
         return prev_min
 
-    # Deletes the given node
+    # Delete the given node.
     # Amortized time complexity: O(log n)
     def delete(self, node):
         if node is None:
@@ -87,7 +88,7 @@ class HollowHeap(heap.Heap):
                             u.right = None
                         u.ep = None
                 else:
-                    # does ranked links
+                    # do ranked links
                     # similiar to fibonacci heap, unique ranks
                     while u.rank in A:
                         u = self._link(u, A[u.rank])
@@ -95,8 +96,8 @@ class HollowHeap(heap.Heap):
                         u.rank += 1
                     A[u.rank] = u
 
-        # does unranked links
-        # combines subtrees with unique rank and finds the root, aka min
+        # do unranked links
+        # combine subtrees with unique rank and finds the root, aka min
         for i in A:
             if h is None:
                 h = A[i]
@@ -111,7 +112,7 @@ class HollowHeap(heap.Heap):
 
     # Decrease the value of the key of the given nodes.
     # new_key must lower than current key value.
-    # Returns the updated node.
+    # Return the updated node.
     # Amortized time complexity: O(1)
     def decrease_key(self, node, new_key):
         assert (
@@ -123,7 +124,7 @@ class HollowHeap(heap.Heap):
 
         u = node  # same naming as in pseudo code
 
-        # decreasing min value, simple cases
+        # decrease min value, simple case
         if u == self.min:
             u.key = new_key
             return self.min
@@ -142,25 +143,14 @@ class HollowHeap(heap.Heap):
             self.min = h
         return v
 
-    # Merges another heap into this heap
+    # Merge another heap into this heap
     # Amortized time complexity: O(1)
     def merge(self, heap):
         assert isinstance(heap, HollowHeap)
         self.min = self._meld(self.min, heap.min)
         self.no_nodes += heap.no_nodes
 
-    # Inserts new node as a child
-    # Heap do not allow this, but this is only used for debugging
-    def _debug_insert_child(self, parent, key, value=None):
-        if value is None:
-            value = key
-
-        n = _Node(key, value)
-        self._add_child(n, parent)
-        self.no_nodes += 1
-        return n
-
-    # Combines two sub trees
+    # Combine two sub trees
     def _meld(self, n, m):
         if n is None:
             return m

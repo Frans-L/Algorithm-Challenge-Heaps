@@ -1,5 +1,5 @@
-from heaps.hollow import HollowHeap
-from heaps.fibonacci import FibonacciHeap
+from hollow import HollowHeap
+from fibonacci import FibonacciHeap
 
 # List of all commands with a simple example
 # NOTE: Recommend to try "visual_example.py" to see what is happening
