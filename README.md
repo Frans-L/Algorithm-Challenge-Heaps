@@ -1,12 +1,14 @@
 # Fibonacci Heap & Hollow Heap
 
-Here are Python implementations of a Fibonacci heap and a Hollow heap.
+Python 3 implementations of a Fibonacci heap and a Hollow heap.
 
-Both are data structures for priority queue operations. The special thing is that their amortized running times are really great. The amortized running times are lower than _binary heap_ or _binomial heap_ have.
+Both are data structures for priority queue operations, in which you can find e.g. the minimum value with time complexity O(1).
 
 ### Amortized Time Complexity
 
-The both heaps achieves the same amortized running times but with different approach.
+The special thing about Fibonacci Heap and Hollow Heap is their low amortized time complexity.
+
+For instance, the amortized running times are lower than _binary heap_ or _binomial heap_ has.
 
 | Method       | Fibonacci | Hollow   | Binary   | Binomial |
 | ------------ | --------- | -------- | -------- | -------- |
@@ -36,7 +38,7 @@ Here is a visualiation of the Hollow heap when nodes are deleted.
   <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibo/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
-### Example
+### How To Use
 
 ```python
 from hollow_heap import HollowHeap
