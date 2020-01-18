@@ -6,7 +6,7 @@ import queue
 
 # Draw the heap as a graph.
 # If file_name is given, the graph will be saved as a file.
-def visualize(_heap, title="Heap", debug_print=True, file_name=None):
+def visualize(_heap, title="Heap", debug_print=True, file_name=None, highlight=None):
     nodes = _find_nodes(_heap)
     G = nx.DiGraph()
     label_dict = {}  # maps nodes to their labels
@@ -15,11 +15,18 @@ def visualize(_heap, title="Heap", debug_print=True, file_name=None):
         for n in nodes:
             # set style and label
             label_dict[n] = n.key
-            style = "normal" if n is not _heap.find_min() else "min"
-            # override if hollow node (hollow heap)
-            if hasattr(n, "item") and n.item is None:
+            style = "normal"
+
+            # ovveride if highlighted
+            if highlight is not None and n == highlight:
+                style = "highlight"
+            # if hollow
+            elif hasattr(n, "item") and n.item is None:
                 label_dict[n] = ""
                 style = "hollow"
+            # if min
+            elif n == _heap.find_min():
+                style = "min"
 
             G.add_node(n, style=style)
 
@@ -59,24 +66,40 @@ def visualize(_heap, title="Heap", debug_print=True, file_name=None):
 
     def _draw_graph_with_layout(layout):
         pos = layout(G)
-        nx_nodes = [n for (n, d) in G.nodes(data=True) if d["style"] == "normal"]
-        nx_nodes_min = [n for (n, d) in G.nodes(data=True) if d["style"] == "min"]
-        nx_nodes_hollow = [n for (n, d) in G.nodes(data=True) if d["style"] == "hollow"]
-        child = [(u, v) for (u, v, d) in G.edges(data=True) if d["style"] == "child"]
-        ep_child = [
-            (u, v) for (u, v, d) in G.edges(data=True) if d["style"] == "ep_child"
-        ]
 
-        nx.draw_networkx_nodes(G, pos, nodelist=nx_nodes)
-        nx.draw_networkx_nodes(G, pos, nodelist=nx_nodes_min, node_color="#fc2003")
-        nx.draw_networkx_nodes(G, pos, nodelist=nx_nodes_hollow, node_color="#7d7978")
+        def node_picker(style):
+            return [n for (n, d) in G.nodes(data=True) if d["style"] == style]
+
+        def edge_picker(style):
+            return [(u, v) for (u, v, d) in G.edges(data=True) if d["style"] == style]
+
+        nx_normal = node_picker("normal")
+        nx_min = node_picker("min")
+        nx_hollow = node_picker("hollow")
+        nx_highlight = node_picker("highlight")
+        child = edge_picker("child")
+        ep_child = edge_picker("ep_child")
+
+        node_size = 500
+        nx.draw_networkx_nodes(
+            G, pos, nodelist=nx_normal, node_size=node_size, node_color="#baeaf7"
+        )
+        nx.draw_networkx_nodes(
+            G, pos, nodelist=nx_min, node_size=node_size, node_color="#f7f2ba"
+        )
+        nx.draw_networkx_nodes(
+            G, pos, nodelist=nx_hollow, node_size=node_size, node_color="#bdb5b5"
+        )
+        nx.draw_networkx_nodes(
+            G, pos, nodelist=nx_highlight, node_size=node_size, node_color="#f7baba"
+        )
         nx.draw_networkx_edges(G, pos, edgelist=child)
         nx.draw_networkx_edges(G, pos, edgelist=ep_child, arrows=False, style="dashed")
         nx.draw_networkx_labels(G, pos, labels=label_dict)
 
         plt.title(title)
         if file_name is not None:
-            plt.savefig(f"visualize/visual_output/{file_name}")
+            plt.savefig(f"visualize/{file_name}")
         plt.show()
 
     # print all node data
