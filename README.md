@@ -1,21 +1,20 @@
-# Coding Challenge: Fibonacci Heap & Hollow Heap
+# Fibonacci Heap & Hollow Heap
 
-Here are implementations of a Fibonacci heap and a Hollow heap.
+Here are Python implementations of a Fibonacci heap and a Hollow heap.
 
-Both are data structures for priority queue operations. The special thing is that their amortized running times are really great. The amortized running times are lower than _binary heap_ or _binomial heap_ has.
+Both are data structures for priority queue operations. The special thing is that their amortized running times are really great. The amortized running times are lower than _binary heap_ or _binomial heap_ have.
 
 ### Amortized Time Complexity
 
-| Method       | Time complexity |
-| ------------ | --------------- |
-| find_min     | O(1)            |
-| insert       | O(1)            |
-| delete_min   | O(log n)        |
-| delete       | O(log n)        |
-| decrease_key | O(1)            |
-| merge        | O(1)            |
-
 The both heaps achieves the same amortized running times but with different approach.
+
+| Method       | Fibonacci | Hollow   | Binary   | Binomial |
+| ------------ | --------- | -------- | -------- | -------- |
+| find_min     | O(1)      | O(1)     | O(1)     | O(1)     |
+| insert       | O(1)      | O(1)     | O(log n) | O(1)     |
+| delete       | O(log n)  | O(log n) | O(log n) | O(log n) |
+| decrease_key | O(1)      | O(1)     | O(log n) | O(log n) |
+| merge        | O(1)      | O(1)     | O(n)     | O(log n) |
 
 ### Fibonacci Heap
 
@@ -43,17 +42,17 @@ Here is a visualiation of the Hollow heap when nodes are deleted.
 from hollow_heap import HollowHeap
 from fibonacci_heap import FibonacciHeap
 
-# Create the heap
+# Create an empty heap
 heap = FibonacciHeap()  # = HollowHeap()
 
-# Insert node with properties
-#   .key = 10
-#   .val = 10
+# Insert a node with properties
+#   key = 10
+#   val = 10
 node10 = heap.insert(10)
 
-# Insert node with properties
-#   .key = 12
-#   .val = "B"
+# Insert a node with properties
+#   key = 12
+#   val = "B"
 nodeB = heap.insert(12, "B")
 
 # Return the smallest node, node10
@@ -62,13 +61,13 @@ n = heap.find_min()
 # Decrease the key of node nodeB
 nodeB = heap.decrease_key(nodeB, 3)
 
-# Deletes the nodeB
+# Delete the nodeB
 heap.delete(nodeB)
 
-# Deletes the min node, node10
+# Delete the min node, node10
 heap.delete_min()
 
-# Merges heap2 into heap
+# Merge heap2 into heap
 heap2 = FibonacciHeap()  # = HollowHeap()
 heap2.insert(8)
 heap.merge(heap2)
