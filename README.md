@@ -2,9 +2,9 @@
 
 Python 3 implementations of a Fibonacci heap and a Hollow heap. The both heaps have exceptional low amortised running times.
 
-The Hollow Heap implementation is based on the paper [Hollow Heaps](https://arxiv.org/abs/1510.06535) (2015) by Thomas Dueholm Hansen, Haim Kaplan, Robert E. Tarjan & Uri Zwick.
+The Hollow heap implementation is based on the paper [Hollow Heaps](https://arxiv.org/abs/1510.06535) (2015) by Thomas Dueholm Hansen, Haim Kaplan, Robert E. Tarjan & Uri Zwick.
 
-The Fibonacci Heap implementation a is well-known algorithm from the the paper [Fibonacci Heaps And Their Uses In Improved Network Optimization Algorithms](https://ieeexplore.ieee.org/document/715934) (1984) by
+The Fibonacci heap implementation a is well-known algorithm from the the paper [Fibonacci Heaps And Their Uses In Improved Network Optimization Algorithms](https://ieeexplore.ieee.org/document/715934) (1984) by
 Michael L. Fredman and Robert E. Tarjan.
 
 ### Amortized Time Complexity
@@ -26,7 +26,7 @@ The Fibonacci heap uses multiple trees. Every node has degree at most _log(n)_ a
 Here is a visualiation of the Fibonacci heap when nodes are deleted.
 
 <p align="center">
-  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/fibonacci.gif?raw=true" alt="Deleting nodes"/>
+  <img src="https://github.com/Frans-L/Algorithm-Challenge-Heaps/blob/master/visualize/fibonacci.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
 ### Hollow Heap
@@ -36,7 +36,7 @@ The Hollow heap achives the same running times as the Fibonacci heap by using la
 Here is a visualiation of the Hollow heap when nodes are deleted.
 
 <p align="center">
-  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
+  <img src="https://github.com/Frans-L/Algorithm-Challenge-Heaps/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
 ### Example
