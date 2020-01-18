@@ -3,6 +3,7 @@ class HeapNode:
     key = None
     right = None
     child = None
+    val = None
 
 
 # Abstract interface of the heap

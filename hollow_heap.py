@@ -10,6 +10,18 @@ class _Node(heap.HeapNode):
         self.ep = None  # extra parent, only hollow can have it
         self.rank = 0
 
+    @property
+    def val(self):
+        if self.item is not None:
+            return self.item.val
+        else:
+            return None
+
+    @val.setter
+    def val(self, val):
+        if self.item is not None:
+            self.item.val = val
+
 
 class _Item:
     def __init__(self, val, node):
