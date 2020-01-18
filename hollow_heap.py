@@ -170,7 +170,7 @@ class HollowHeap(heap.Heap):
             return n
         return self._link(n, m)
 
-    # Makes given node to be a child of another given node
+    # Make given node to be a child of another given node
     def _add_child(self, child, parent):
         child.right = parent.child
         parent.child = child
