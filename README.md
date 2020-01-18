@@ -39,7 +39,7 @@ Here is a visualiation of the Hollow heap when nodes are deleted.
   <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
-### How To Use
+### Example
 
 ```python
 from hollow_heap import HollowHeap
@@ -76,3 +76,28 @@ heap2.insert(8)
 heap.merge(heap2)
 
 ```
+
+### Visualization
+
+You can visualize the heaps by using _visualize/visualize.py_
+
+```python
+from visualize.visualize import visualize
+from abstract_heap import Heap
+
+heap = HollowHeap()
+
+nodeA = heap.insert(1)
+nodeB = heap.insert(2)
+
+visualize(heap, title="Title", highlight=nodeB)
+```
+
+### Tests
+
+To run unittests, run command `$ python tests.py`
+
+### Licence
+
+MIT License
+Copyright (c) 2020 Frans L
