@@ -27,7 +27,6 @@ def visual_delete_one_by_one(heap_type, title):
     visualize(
         heap,
         title=f"{title}: 0. Inserted values",
-        file_name=f"{title}_0.png",
         highlight=min(nodes, key=lambda n: n.key),
     )
 
