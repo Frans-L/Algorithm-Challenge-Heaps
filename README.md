@@ -26,7 +26,7 @@ The Fibonacci heap uses multiple trees. Every node has degree at most _log(n)_ a
 Here is a visualiation of the Fibonacci heap when nodes are deleted.
 
 <p align="center">
-  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/fibonacci.gif?raw=true" alt="Deleting nodes"/>
+  <img src="https://github.com/Frans-L/Algorithm-Challenge-Heaps/blob/master/visualize/fibonacci.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
 ### Hollow Heap
@@ -36,7 +36,7 @@ The Hollow heap achives the same running times as the Fibonacci heap by using la
 Here is a visualiation of the Hollow heap when nodes are deleted.
 
 <p align="center">
-  <img src="https://github.com/Frans-L/Code-Challenge-Hollow-Fibonacci/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
+  <img src="https://github.com/Frans-L/Algorithm-Challenge-Heaps/blob/master/visualize/hollow.gif?raw=true" alt="Deleting nodes"/>
 </p>
 
 ### How To Use
