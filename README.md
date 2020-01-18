@@ -83,14 +83,14 @@ You can visualize the heaps by using _visualize/visualize.py_
 
 ```python
 from visualize.visualize import visualize
-from abstract_heap import Heap
+from hollow_heap import HollowHeap
 
 heap = HollowHeap()
-
 nodeA = heap.insert(1)
 nodeB = heap.insert(2)
 
 visualize(heap, title="Title", highlight=nodeB)
+
 ```
 
 ### Tests
